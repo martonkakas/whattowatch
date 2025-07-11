@@ -1,4 +1,4 @@
-import { Icon } from './icon';
+import Icon from './icon';
 import { styles } from './styles';
 
 export const Help = ({ isOpen, handleToggleClick }: { isOpen: boolean; handleToggleClick: () => void; }) => (
