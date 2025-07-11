@@ -2,20 +2,20 @@
 
 import axios from 'axios';
 
-import { Movie } from './types/Movie';
+import { Movie } from '../types/Movie';
 
 
 import { ChangeEvent, useRef, useState } from 'react';
-import { Help } from './components/help';
-import { MovieCard } from './components/movie-card';
-import { styles } from './components/styles';
-import { Header } from './components/header';
-import { Genre } from './components/genre';
-import { SubHeader } from './components/sub-header';
-import { NewButton } from './components/new-button';
-import { IconButton } from './components/icon-button';
+import { Help } from '../components/help';
+import { MovieCard } from '../components/movie-card';
+import { styles } from '../components/styles';
+import { Header } from '../components/header';
+import { Genre } from '../components/genre';
+import { SubHeader } from '../components/sub-header';
+import { NewButton } from '../components/new-button';
+import { IconButton } from '../components/icon-button';
 
-import Icon from './components/icon';
+import Icon from '../components/icon';
 
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
