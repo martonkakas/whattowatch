@@ -1,7 +1,7 @@
 import { Icon } from './icon';
 import { styles } from './styles';
 
-export const Help = ({ isOpen, handleToggleClick }) => (
+export const Help = ({ isOpen, handleToggleClick }: { isOpen: boolean; handleToggleClick: () => void; }) => (
   <div
     id="help-wrapper"
     className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-md"
