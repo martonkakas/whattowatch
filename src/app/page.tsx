@@ -1,12 +1,14 @@
 'use client'
 
+import axios from 'axios';
+
+import { Movie } from './types/Movie';
+
 import { ChangeEvent, useRef, useState } from 'react';
 import { Help } from './components/help';
 import { Icon } from './components/icon';
 import { MovieCard } from './components/movie-card';
 import { styles } from './components/styles';
-
-import axios from 'axios';
 
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
@@ -18,7 +20,7 @@ export default function Home() {
   const [customGenre, setCustomGenre] = useState<string>('');
   const [startYear, setStartYear] = useState<string>('');
   const [endYear, setEndYear] = useState<string>('');
-  const [movies, setMovies] = useState<any[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const customInputRef = useRef<HTMLInputElement>(null); // Ref for custom genre input
