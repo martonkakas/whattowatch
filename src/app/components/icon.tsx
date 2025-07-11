@@ -1,4 +1,4 @@
-export const Icon = ({ name, diameter = 16 }: { name: string; diameter?: number }) => {
+const Icon = ({ name, diameter = 16 }: { name: string; diameter?: number }) => {
   switch (name) {
     case 'close':
       return (
@@ -39,3 +39,5 @@ export const Icon = ({ name, diameter = 16 }: { name: string; diameter?: number 
       return (<span></span>);
   }
 };
+
+export default Icon;

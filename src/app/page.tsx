@@ -6,9 +6,9 @@ import { Movie } from './types/Movie';
 
 import { ChangeEvent, useRef, useState } from 'react';
 import { Help } from './components/help';
-import { Icon } from './components/icon';
 import { MovieCard } from './components/movie-card';
 import { styles } from './components/styles';
+import Icon from './components/icon';
 
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
