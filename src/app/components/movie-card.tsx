@@ -13,10 +13,10 @@ export const MovieCard = ({ title, year, poster, plot, genres, duration, url }: 
     </span>
     <span className="flex flex-col gap-2">
       <span className="text-2xl font-bold">{title}</span>
-      <span className="flex gap-2">
-        <span className="opacity-75 text-lg font-medium">{year}</span>
-        <span className="opacity-75 text-lg font-medium">&bull;</span>
-        <span className="opacity-75 text-lg font-medium">{duration}</span>
+      <span className="flex gap-2 opacity-75 text-lg font-medium">
+        <span>{year}</span>
+        <span>&bull;</span>
+        <span>{duration}</span>
       </span>
       <span className="opacity-75 text-lg font-medium">{genres.join(', ')}</span>
       <span className="text-lg font-medium">{plot}</span>

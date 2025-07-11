@@ -4,10 +4,17 @@ import axios from 'axios';
 
 import { Movie } from './types/Movie';
 
+
 import { ChangeEvent, useRef, useState } from 'react';
 import { Help } from './components/help';
 import { MovieCard } from './components/movie-card';
 import { styles } from './components/styles';
+import { Header } from './components/header';
+import { Genre } from './components/genre';
+import { SubHeader } from './components/sub-header';
+import { NewButton } from './components/new-button';
+import { IconButton } from './components/icon-button';
+
 import Icon from './components/icon';
 
 export default function Home() {
@@ -68,12 +75,10 @@ export default function Home() {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLFormElement>) => {
     if (e.key === 'Enter') {
-      e.preventDefault(); // Prevent default form submission
+      e.preventDefault();
       if (document.activeElement === customInputRef.current && customGenre.trim()) {
-        // Add custom genre if focused and not empty
         handleCustomGenreClick();
       } else {
-        // Submit form if not focused on custom genre input
         handleSubmit();
       }
     }
@@ -120,17 +125,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col gap-2 items-center p-6">
-      <header className="flex items-center justify-center gap-2 w-full max-w-2xl">
-        <h1 className="flex gap-[2px] text-2xl">
-          <span className="font-black">what</span>
-          <span className="font-light">to</span>
-          <span className="font-black">watch</span>
-        </h1>
-        <button type="button" aria-controls="help" onClick={handleToggleHelpClick}>
-          <span style={styles.visuallyHidden}>Help</span>
-          <Icon name="help" diameter={16} />
-        </button>
-      </header>
+      <Header handleToggleHelpClick={handleToggleHelpClick} />
       {movies.length === 0 && (
         <form
           onKeyDown={handleKeyPress}
@@ -150,10 +145,12 @@ export default function Home() {
               {isLoading ? (
                 <span className="text-lg font-medium">Please wait...</span>
               ) : (
-                <button type="submit" onClick={handleSubmit}>
-                  <span style={styles.visuallyHidden}>Search</span>
-                  <Icon name="search" diameter={24} />
-                </button>
+                <IconButton
+                  label="Search"
+                  icon="search"
+                  diameter={24}
+                  onClick={handleSubmit}
+                />
               )}
             </div>
           </div>
@@ -171,30 +168,18 @@ export default function Home() {
             </summary>
             <div className="flex flex-col gap-4 pt-4">
               <div className="flex flex-col gap-3">
-                <div>
-                  <h2 className="text-2xl font-bold">Genres</h2>
-                  <p className="opacity-75 text-lg font-medium">Pick genres for your movie</p>
-                </div>
+                <SubHeader
+                  title="Genres"
+                  description="Pick genres for your movie"
+                />
                 <ul className="flex flex-wrap gap-2">
                   {defaultGenres.map((genre) => (
                     <li key={genre}>
-                      <label
-                        htmlFor={`genre-${genre}`}
-                        className={genres.includes(genre) ?
-                          'px-2 py-1 rounded-md flex items-center cursor-pointer hover:bg-gray-800 border-1 border-gray-600 bg-gray-700' :
-                          'px-2 py-1 rounded-md flex items-center cursor-pointer hover:bg-gray-800 border-1 border-transparent bg-gray-800'}
-                      >
-                        <input
-                          type="checkbox"
-                          id={`genre-${genre}`}
-                          className="flex-1 outline-0 text-lg font-medium"
-                          value={genre}
-                          checked={genres.includes(genre)}
-                          onChange={handleGenresChange}
-                          style={styles.visuallyHidden}
-                        />
-                        <span className="leading-none text-lg font-medium">{genre}</span>
-                      </label>
+                      <Genre
+                        genre={genre}
+                        isActive={genres.includes(genre)}
+                        handleChange={handleGenresChange}
+                      />
                     </li>
                   ))}
                 </ul>
@@ -210,18 +195,19 @@ export default function Home() {
                       value={customGenre}
                       ref={customInputRef}
                     />
-                    <button type="button" onClick={handleCustomGenreClick}>
-                      <span style={styles.visuallyHidden}>Add custom genre</span>
-                      <Icon name="plus" />
-                    </button>
+                    <IconButton
+                      label="Add custom genre"
+                      icon="plus"
+                      onClick={handleCustomGenreClick}
+                    />
                   </span>
                 </div>
               </div>
               <div className="flex flex-col gap-3">
-                <div>
-                  <h2 className="text-2xl font-bold">Years</h2>
-                  <p className="opacity-75 text-lg font-medium">Pick first and last years for your movie</p>
-                </div>
+                <SubHeader
+                  title="Years"
+                  description="Pick first and last years for your movie"
+                />
                 <ul className="flex gap-4">
                   <li className="flex flex-col flex-1 gap-1">
                     <label htmlFor="year-start" className="text-lg font-medium">Start</label>
@@ -275,10 +261,10 @@ export default function Home() {
       )}
       {movies.length > 0 && (
         <div className="flex flex-col gap-4 items-center max-w-xl w-full">
-          <header className="w-full">
-            <h2 className="text-2xl font-bold">Recommendations</h2>
-            <p className="opacity-75 text-lg font-medium">Here are some movies based on your filters</p>
-          </header>
+          <SubHeader
+            title="Recommendations"
+            description="Here are some movies based on your filters"
+          />
           <ul className="flex flex-col w-full gap-4">
             {movies.map((movie, index) => (
               <li key={index} className="mb-4">
@@ -295,20 +281,14 @@ export default function Home() {
             ))}
           </ul>
           <footer className="flex gap-3 items-center">
-            <button
-              type="button"
-              className="border-1 border-gray-600 rounded-lg bg-gray-800 px-4 py-2 text-lg font-medium"
-              onClick={handleResetMoviesAndFiltersClick}
-            >
-              New movies, new filters
-            </button>
-            <button
-              type="button"
-              className="border-1 border-gray-600 rounded-lg bg-gray-800 px-4 py-2 text-lg font-medium"
-              onClick={handleResetMoviesClick}
-            >
-              New movies, same filters
-            </button>
+            <NewButton
+              label="New movies, new filters"
+              handleClick={handleResetMoviesAndFiltersClick}
+            />
+            <NewButton
+              label="New movies, same filters"
+              handleClick={handleResetMoviesClick}
+            />
           </footer>
         </div>
       )}
