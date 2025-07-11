@@ -36,6 +36,6 @@ export const Icon = ({ name, diameter = 16 }: { name: string; diameter?: number 
         </svg>
       );
     default:
-      return null;
+      return (<span></span>);
   }
 };
