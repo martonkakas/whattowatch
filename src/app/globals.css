@@ -24,25 +24,3 @@ body {
   color: var(--foreground);
   font-family: 'Space Grotesk', sans-serif;
 }
-
-details {
-  .icn--opened {
-    display: none;
-  }
-  .icn--closed {
-    display: block;
-  }
-}
-
-details[open] {
-  .icn--closed {
-    display: none;
-  }
-  .icn--opened {
-    display: block;
-  }
-}
-
-summary::marker {
-  content: '';
-}

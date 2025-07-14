@@ -6,7 +6,15 @@ const inactiveClassname = 'px-2 py-1 rounded-md flex items-center cursor-pointer
 const inputClassname = 'flex-1 outline-0 text-lg font-medium';
 const spanClassname = 'leading-none text-lg font-medium';
 
-export const Genre = ({ genre, isActive, handleChange }: { genre: string; isActive: boolean; handleChange: (e: ChangeEvent<HTMLInputElement>) => void }) => (
+export const Genre = ({
+  genre,
+  isActive,
+  handleChange
+}: {
+  genre: string;
+  isActive: boolean;
+  handleChange: (e: ChangeEvent<HTMLInputElement>) => void
+}) => (
   <label
     htmlFor={`genre-${genre}`}
     className={isActive ? activeClassname : inactiveClassname}

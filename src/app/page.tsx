@@ -4,18 +4,16 @@ import axios from 'axios';
 
 import { Movie } from '../types/Movie';
 
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useId, useRef, useState } from 'react';
 import { Help } from '../components/help';
-import { MovieCard } from '../components/movie-card';
-import { styles } from '../components/styles';
 import { Header } from '../components/header';
-import { Genre } from '../components/genre';
-import { SubHeader } from '../components/sub-header';
-import { NewButton } from '../components/new-button';
 import { IconButton } from '../components/icon-button';
 
-import Icon from '../components/icon';
 import { Status } from '@/components/status';
+import { YearFilter } from '@/components/year-filter';
+import { MovieList } from '@/components/movie-list';
+import { GenreFilter } from '@/components/genre-filter';
+import { FilterHeader } from '@/components/filter-header';
 
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
@@ -30,8 +28,13 @@ export default function Home() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [status, setStatus] = useState<string>(''); // Status for loading or error messages
+  const [isOpen, setIsOpen] = useState<boolean>(false); // State for filter visibility
 
   const customInputRef = useRef<HTMLInputElement>(null); // Ref for custom genre input
+
+  const startYearId = useId();
+  const endYearId = useId();
+  const customGenreId = useId();
 
   const handleToggleHelpClick = () => {
     setIsHelpOpen(!isHelpOpen);
@@ -64,6 +67,10 @@ export default function Home() {
     setVibe(value);
   };
 
+  const handleFilterHeaderClick = () => {
+    setIsOpen(!isOpen);
+  };
+
   const handleStartYearChange = (e: ChangeEvent) => {
     const { value } = e.target as HTMLInputElement;
     setStartYear(value);
@@ -86,22 +93,28 @@ export default function Home() {
   };
 
   const fetchMovies = async () => {
-    const response = await axios.request({
-      method: 'POST',
-      url: `${process.env.API_ENDPOINT}/api/recommend`,
-      data: {
-        vibe,
-        genres,
-        startYear,
-        endYear
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const json = JSON.parse(response.data);
-    console.log('Response from API:', json.recommendations);
-    setMovies(json.recommendations);
+    try {
+      const response = await axios.request({
+        method: 'POST',
+        url: `${process.env.API_ENDPOINT}/api/recommend`,
+        data: {
+          vibe,
+          genres,
+          startYear,
+          endYear
+        },
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const json = JSON.parse(response.data);
+      console.log('Response from API:', json.recommendations);
+      setMovies(json.recommendations);
+      console.log('Fetching movies with:', { vibe, genres, startYear, endYear });
+    } catch (error) {
+      console.error('Error fetching movies:', error);
+      throw error;
+    }
   };
 
 
@@ -111,7 +124,9 @@ export default function Home() {
 
     try {
       setStatus('Fetching movies...');
+      console.log('Fetching movies with:', { vibe, genres, startYear, endYear });
       await fetchMovies();
+      console.log('Movies fetched successfully!');
       setStatus('');
     } catch (error) {
       setStatus('Error fetching movies. Please try again later.');
@@ -127,6 +142,14 @@ export default function Home() {
     handleSubmit();
   };
 
+  const handleClearStartYearClick = () => {
+    setStartYear('');
+  };
+
+  const handleClearEndYearClick = () => {
+    setEndYear('');
+  };
+
   const handleResetMoviesAndFiltersClick = () => {
     setMovies([]);
     setGenres([]);
@@ -138,7 +161,9 @@ export default function Home() {
 
   return (
     <main className="flex flex-col gap-2 items-center p-6">
-      <Header handleToggleHelpClick={handleToggleHelpClick} />
+      <Header
+        handleToggleHelpClick={handleToggleHelpClick}
+      />
       {movies.length === 0 && (
         <form
           onKeyDown={handleKeyPress}
@@ -167,143 +192,43 @@ export default function Home() {
               )}
             </div>
           </div>
-          <details>
-            <summary>
-              <div className="flex items-center w-full">
-                <span className="flex-1 text-lg font-medium">Filters</span>
-                <span className="icn--closed">
-                  <Icon name="plus" diameter={16} />
-                </span>
-                <span className="icn--opened">
-                  <Icon name="minus" diameter={16} />
-                </span>
-              </div>
-            </summary>
-            <div className="flex flex-col gap-4 pt-4">
-              <div className="flex flex-col gap-3">
-                <SubHeader
-                  title="Genres"
-                  description="Pick genres for your movie"
+          <div>
+            <FilterHeader
+              isOpen={isOpen}
+              onClick={handleFilterHeaderClick}
+            />
+            {isOpen && (
+              <div className="flex flex-col gap-4 pt-4">
+                <GenreFilter
+                  genres={defaultGenres}
+                  handleGenresChange={handleGenresChange}
+                  customGenre={customGenre}
+                  customGenreId={customGenreId}
+                  handleCustomGenreChange={handleCustomGenreChange}
+                  handleCustomGenreClick={handleCustomGenreClick}
+                  customInputRef={customInputRef}
                 />
-                <ul className="flex flex-wrap gap-2">
-                  {defaultGenres.map((genre) => (
-                    <li key={genre}>
-                      <Genre
-                        genre={genre}
-                        isActive={genres.includes(genre)}
-                        handleChange={handleGenresChange}
-                      />
-                    </li>
-                  ))}
-                </ul>
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="genre-add-custom" className="text-lg font-medium">Missing something? Add yours</label>
-                  <span className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      id="genre-add-custom"
-                      className="border-1 border-gray-600 rounded-lg bg-gray-800 px-2 py-1 outline-0 flex-1 text-lg font-medium"
-                      placeholder="e.g. Romantic comedy"
-                      onChange={handleCustomGenreChange}
-                      value={customGenre}
-                      ref={customInputRef}
-                    />
-                    <IconButton
-                      label="Add custom genre"
-                      icon="plus"
-                      onClick={handleCustomGenreClick}
-                    />
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col gap-3">
-                <SubHeader
-                  title="Years"
-                  description="Pick first and last years for your movie"
+                <YearFilter
+                  startYear={startYear}
+                  startYearId={startYearId}
+                  endYear={endYear}
+                  endYearId={endYearId}
+                  handleStartYearChange={handleStartYearChange}
+                  handleEndYearChange={handleEndYearChange}
+                  handleClearStartYearClick={handleClearStartYearClick}
+                  handleClearEndYearClick={handleClearEndYearClick}
                 />
-                <ul className="flex gap-4">
-                  <li className="flex flex-col flex-1 gap-1">
-                    <label htmlFor="year-start" className="text-lg font-medium">Start</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        id="year-start"
-                        className="border-1 border-gray-600 rounded-lg bg-gray-800 px-2 py-1 outline-0 w-full text-lg font-medium"
-                        min={1900}
-                        max={new Date().getFullYear()}
-                        step={1}
-                        value={startYear}
-                        placeholder="e.g. 1990"
-                        onChange={handleStartYearChange}
-                      />
-                      {startYear && (
-                        <button type="button" onClick={() => setStartYear('')}>
-                          <span style={styles.visuallyHidden}>Clear</span>
-                          <Icon name="close" />
-                        </button>
-                      )}
-                    </div>
-                  </li>
-                  <li className="flex flex-col flex-1 gap-1">
-                    <label htmlFor="year-end" className="text-lg font-medium">End</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="number"
-                        id="year-end"
-                        className="border-1 border-gray-600 rounded-lg bg-gray-800 px-2 py-1 outline-0 w-full text-lg font-medium"
-                        min={1900}
-                        max={new Date().getFullYear()}
-                        step={1}
-                        value={endYear}
-                        placeholder="e.g. 2020"
-                        onChange={handleEndYearChange}
-                      />
-                      {endYear && (
-                        <button type="button" onClick={() => setEndYear('')}>
-                          <span style={styles.visuallyHidden}>Clear</span>
-                          <Icon name="close" />
-                        </button>
-                      )}
-                    </div>
-                  </li>
-                </ul>
               </div>
-            </div>
-          </details>
+            )}
+          </div>
         </form>
       )}
       {movies.length > 0 && (
-        <div className="flex flex-col gap-4 items-center max-w-xl w-full">
-          <SubHeader
-            title="Recommendations"
-            description="Here are some movies based on your filters"
-          />
-          <ul className="flex flex-col w-full gap-4">
-            {movies.map((movie, index) => (
-              <li key={index} className="mb-4">
-                <MovieCard
-                  title={movie.title}
-                  year={movie.year}
-                  poster={movie.poster}
-                  plot={movie.plot}
-                  genres={movie.genres}
-                  duration={movie.duration}
-                  url={movie.imdbUrl}
-                />
-              </li>
-            ))}
-          </ul>
-          <footer className="flex gap-3 items-center">
-            <NewButton
-              label="New movies, new filters"
-              handleClick={handleResetMoviesAndFiltersClick}
-            />
-            <NewButton
-              label="New movies, same filters"
-              handleClick={handleResetMoviesClick}
-            />
-          </footer>
-        </div>
+        <MovieList
+          movies={movies}
+          handleResetMoviesAndFiltersClick={handleResetMoviesAndFiltersClick}
+          handleResetMoviesClick={handleResetMoviesClick}
+        />
       )}
       <Help
         isOpen={isHelpOpen}
