@@ -91,7 +91,7 @@ export default function Home() {
 
     try {
       const client = new OpenAI({
-        apiKey: process.env.XAI_API_KEY,
+        apiKey: process.env.NEXT_PUBLIC_XAI_API_KEY,
         baseURL: 'https://api.x.ai/v1',
         dangerouslyAllowBrowser: true
       });
