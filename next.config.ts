@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
     API_ENDPOINT: process.env.API_ENDPOINT
   },
   crossOrigin: 'anonymous',
+  compiler: {
+    removeConsole: false,
+  },
 };
 
 export default nextConfig;
