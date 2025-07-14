@@ -14,6 +14,7 @@ import { YearFilter } from '@/components/year-filter';
 import { MovieList } from '@/components/movie-list';
 import { GenreFilter } from '@/components/genre-filter';
 import { FilterHeader } from '@/components/filter-header';
+import { styles } from '@/components/styles';
 
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
@@ -35,6 +36,7 @@ export default function Home() {
   const startYearId = useId();
   const endYearId = useId();
   const customGenreId = useId();
+  const helpId = useId();
 
   const handleToggleHelpClick = () => {
     setIsHelpOpen(!isHelpOpen);
@@ -159,8 +161,15 @@ export default function Home() {
     setDefaultGenres(availableGenres);
   };
 
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { target } = e;
+    if (!(target instanceof HTMLImageElement)) return;
+    target.srcset = '';
+    target.src = '/placeholder.svg';
+  };
+
   return (
-    <main className="flex flex-col gap-2 items-center p-6">
+    <main className="flex flex-col gap-2 items-center py-6 px-4">
       <Header
         handleToggleHelpClick={handleToggleHelpClick}
       />
@@ -181,7 +190,9 @@ export default function Home() {
                 onChange={handleVibeChange}
               />
               {isLoading ? (
-                <span className="text-lg font-medium">Please wait...</span>
+                <span className="loader">
+                  <span style={styles.visuallyHidden}>Please wait...</span>
+                </span>
               ) : (
                 <IconButton
                   label="Search"
@@ -200,7 +211,8 @@ export default function Home() {
             {isOpen && (
               <div className="flex flex-col gap-4 pt-4">
                 <GenreFilter
-                  genres={defaultGenres}
+                  defaultGenres={defaultGenres}
+                  genres={genres}
                   handleGenresChange={handleGenresChange}
                   customGenre={customGenre}
                   customGenreId={customGenreId}
@@ -228,11 +240,13 @@ export default function Home() {
           movies={movies}
           handleResetMoviesAndFiltersClick={handleResetMoviesAndFiltersClick}
           handleResetMoviesClick={handleResetMoviesClick}
+          handleImageError={handleImageError}
         />
       )}
       <Help
         isOpen={isHelpOpen}
         handleToggleClick={handleToggleHelpClick}
+        id={helpId}
       />
       <Status
         message={status}

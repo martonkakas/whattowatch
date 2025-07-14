@@ -1,6 +1,6 @@
-const subHeaderClassname = 'w-full';
-const titleClassname = 'text-2xl font-bold';
-const descriptionClassname = 'opacity-75 text-lg font-medium';
+const subHeaderClassName = 'w-full';
+const titleClassName = 'text-2xl font-bold';
+const descriptionClassName = 'opacity-75 text-lg font-medium';
 
 export const SubHeader = ({
   title,
@@ -9,8 +9,8 @@ export const SubHeader = ({
   title: string;
   description: string
 }) => (
-  <div className={subHeaderClassname}>
-    <h2 className={titleClassname}>{title}</h2>
-    <p className={descriptionClassname}>{description}</p>
+  <div className={subHeaderClassName}>
+    <h2 className={titleClassName}>{title}</h2>
+    <p className={descriptionClassName}>{description}</p>
   </div>
 );

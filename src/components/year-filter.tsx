@@ -1,21 +1,22 @@
 import { ChangeEvent } from 'react';
 import { ClearYear } from './clear-year';
 import { SubHeader } from './sub-header';
+import { labels } from '@/data/labels';
 
-const yearFilterClassname = 'flex flex-col gap-3';
-const listClassname = 'flex gap-4';
-const listItemClassname = 'flex flex-col flex-1 gap-1';
-const fieldWrapperClassname = 'flex items-center gap-2';
-const labelClassname = 'text-lg font-medium';
-const fieldClassname = 'border-1 border-gray-600 rounded-lg bg-gray-800 px-2 py-1 outline-0 w-full text-lg font-medium';
+const yearFilterClassName = 'flex flex-col gap-3';
+const listClassName = 'flex gap-4';
+const listItemClassName = 'flex flex-col flex-1 gap-1';
+const fieldWrapperClassName = 'flex items-center gap-2';
+const labelClassName = 'text-lg font-medium';
+const fieldClassName = 'border-1 border-gray-600 rounded-lg bg-gray-800 px-2 py-1 outline-0 w-full text-lg font-medium';
 
-const title = 'Years';
-const description = 'Pick first and last years for your movie';
+const title = labels.years.title;
+const description = labels.years.description;
 
-const startYearLabel = 'Start Year';
-const startYearPlaceholder = 'e.g. 1990';
-const endYearLabel = 'End Year';
-const endYearPlaceholder = 'e.g. 2020';
+const startYearLabel = labels.years.startYear.label;
+const startYearPlaceholder = labels.years.startYear.placeholder;
+const endYearLabel = labels.years.endYear.label;
+const endYearPlaceholder = labels.years.endYear.placeholder;
 
 export const YearFilter = ({
   startYear,
@@ -36,19 +37,19 @@ export const YearFilter = ({
   handleClearStartYearClick: () => void;
   handleClearEndYearClick: () => void;
 }) => (
-  <div className={yearFilterClassname}>
+  <div className={yearFilterClassName}>
     <SubHeader
       title={title}
       description={description}
     />
-    <ul className={listClassname}>
-      <li className={listItemClassname}>
-        <label htmlFor={startYearId} className={labelClassname}>{startYearLabel}</label>
-        <div className={fieldWrapperClassname}>
+    <ul className={listClassName}>
+      <li className={listItemClassName}>
+        <label htmlFor={startYearId} className={labelClassName}>{startYearLabel}</label>
+        <div className={fieldWrapperClassName}>
           <input
             type="number"
             id={startYearId}
-            className={fieldClassname}
+            className={fieldClassName}
             min={1900}
             max={new Date().getFullYear()}
             step={1}
@@ -61,13 +62,13 @@ export const YearFilter = ({
           )}
         </div>
       </li>
-      <li className={listItemClassname}>
-        <label htmlFor={endYearId} className={labelClassname}>{endYearLabel}</label>
-        <div className={fieldWrapperClassname}>
+      <li className={listItemClassName}>
+        <label htmlFor={endYearId} className={labelClassName}>{endYearLabel}</label>
+        <div className={fieldWrapperClassName}>
           <input
             type="number"
             id={endYearId}
-            className={fieldClassname}
+            className={fieldClassName}
             min={1900}
             max={new Date().getFullYear()}
             step={1}

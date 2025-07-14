@@ -1,40 +1,48 @@
-import Icon from './icon';
-import { styles } from './styles';
+import { labels } from '@/data/labels';
+import { IconButton } from './icon-button';
+import { icons } from '@/data/icons';
+import { Title } from './title';
 
-export const Help = ({ isOpen, handleToggleClick }: { isOpen: boolean; handleToggleClick: () => void; }) => (
+const helpClassName = 'fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-md';
+const dialogClassName = 'flex flex-col gap-3 relative z-20 flex flex-col max-w-md w-full';
+const closeClassName = 'absolute z-30 top-6 right-6';
+const titleClassName = 'text-2xl font-bold';
+const descriptionClassName = 'text-lg font-medium';
+const overlayClassName = 'absolute inset-0 z-10 bg-black opacity-50';
+
+const closeIcon = icons.close;
+
+const closeLabel = labels.close;
+const title = labels.help.title;
+const helpLabel = labels.help.label;
+const description = labels.help.description.map(t => t === '{{title}}' ? <Title key="title" /> : t);
+const description2 = [
+  `Made with ❤️ by `,
+  <a key="url" href="https://skape.io">skape.io</a>
+];
+
+export const Help = ({ isOpen, handleToggleClick, id }: { isOpen: boolean; handleToggleClick: () => void; id: string; }) => (
   <div
-    id="help-wrapper"
-    className="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-md"
+    id={id}
+    className={helpClassName}
     hidden={!isOpen}
+    aria-modal="true"
+    aria-label={helpLabel}
   >
-    <button
-      type="button"
-      className="absolute z-30 top-6 right-6"
-      aria-controls="help"
+    <IconButton
+      className={closeClassName}
+      label={closeLabel}
+      icon={closeIcon}
       onClick={handleToggleClick}
-    >
-      <span style={styles.visuallyHidden}>Close</span>
-      <Icon name="close" diameter={24} />
-    </button>
-    <div
-      id="help"
-      className="flex flex-col gap-3 relative z-20 flex flex-col max-w-md w-full"
-      aria-modal="true"
-      aria-label="help"
-    >
-      <h2 className="text-2xl font-bold">What is this?</h2>
-      <p className="text-lg font-medium">Hey there! Welcome to What to Watch, my fun little side-project born
-        from those moments when finding the perfect movie feels impossible,
-        but you’re craving something. Whether you’re just vibing with a
-        certain mood or want to pick films from a specific year range, this
-        app’s got you covered. It’s not too serious—just a chill way to
-        discover your next watch. I might toss in some new features down the
-        line, so if you’ve got ideas or something’s missing, hit me up
-        at <a href="mailto:marton@skape.io">marton@skape.io</a>.</p>
-      <p className="text-lg font-medium">Made with ❤️ by <a href="https://skape.io">skape.io</a></p>
+      diameter={24}
+    />
+    <div className={dialogClassName}>
+      <h2 className={titleClassName}>{title}</h2>
+      <p className={descriptionClassName}>{description}</p>
+      <p className={descriptionClassName}>{description2}</p>
     </div>
     <span
-      className="absolute inset-0 z-10 bg-black opacity-50"
+      className={overlayClassName}
       onClick={handleToggleClick}
     />
   </div>

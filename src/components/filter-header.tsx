@@ -1,12 +1,14 @@
 import Icon from './icon';
+import { labels } from '@/data/labels';
+import { icons } from '@/data/icons';
 
-const filterHeaderClassname = 'flex items-center w-full';
-const labelClassname = 'flex-1 text-lg font-medium';
+const filterHeaderClassName = 'flex items-center w-full';
+const labelClassName = 'flex-1 text-lg font-medium';
 
-const label = 'Filters';
+const label = labels.filters.title;
 
-const iconOpened = 'minus';
-const iconClosed = 'plus';
+const iconOpened = icons.minus;
+const iconClosed = icons.plus;
 
 export const FilterHeader = ({
   isOpen,
@@ -15,8 +17,8 @@ export const FilterHeader = ({
   isOpen: boolean;
   onClick: () => void;
 }) => (
-  <div className={filterHeaderClassname} onClick={onClick}>
-    <span className={labelClassname}>{label}</span>
+  <div className={filterHeaderClassName} onClick={onClick}>
+    <span className={labelClassName}>{label}</span>
     <Icon
       name={isOpen ? iconOpened : iconClosed}
       diameter={16}
