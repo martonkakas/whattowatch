@@ -1,9 +1,8 @@
 'use client'
 
-import axios from 'axios';
+import OpenAI from 'openai';
 
 import { Movie } from '../types/Movie';
-
 
 import { ChangeEvent, useRef, useState } from 'react';
 import { Help } from '../components/help';
@@ -16,6 +15,7 @@ import { NewButton } from '../components/new-button';
 import { IconButton } from '../components/icon-button';
 
 import Icon from '../components/icon';
+import { Status } from '@/components/status';
 
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
@@ -29,6 +29,7 @@ export default function Home() {
   const [endYear, setEndYear] = useState<string>('');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [status, setStatus] = useState<string>(''); // Status for loading or error messages
 
   const customInputRef = useRef<HTMLInputElement>(null); // Ref for custom genre input
 
@@ -84,28 +85,78 @@ export default function Home() {
     }
   };
 
-  const fetchMovies = async () => {
-    const response = await axios.request({
-      method: 'POST',
-      url: 'http://localhost:3001/api/recommend',
-      data: {
-        vibe,
-        genres,
-        startYear,
-        endYear
-      },
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    const json = JSON.parse(response.data);
-    console.log('Response from API:', json.recommendations);
-    setMovies(json.recommendations);
-  };
-
   const handleSubmit = async () => {
     setIsLoading(true);
-    await fetchMovies();
+    setStatus('Starting to fetch movie recommendations...');
+
+    try {
+      const client = new OpenAI({
+        apiKey: process.env.XAI_API_KEY,
+        baseURL: 'https://api.x.ai/v1',
+        dangerouslyAllowBrowser: true
+      });
+
+      if (!client) {
+        setStatus('Failed to initialize OpenAI client.');
+        setIsLoading(false);
+        return;
+      } else {
+        setStatus('Started fetching movie recommendations...');
+      }
+
+      const completion = await client.chat.completions.create({
+        model: 'grok-4',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a film recommending AI. Recommend a movie based on the user\'s preferences (e.g., genre, mood, start year - end year).',
+          },
+          {
+            role: 'user',
+            content: `Please recommend 3 movies for me which are eligible for the following preferences:
+              - Genre: ${genres.length > 0 ? genres.join(', ') : 'any'},
+              - Vibe: ${vibe || 'any'},
+              - Start Year: ${startYear || 'any'},
+              - End Year: ${endYear || 'any'}.
+              Your response must be a JSON object with the following structure:
+              {
+                "recommendations": [
+                  {
+                    "title": "Movie Title",
+                    "plot": "Brief description of the movie plot.",
+                    "year": 2023,
+                    "poster": "URL to the movie poster image",
+                    "imdbId": "tt1234567",
+                    "imdbUrl": "https://www.imdb.com/title/tt1234567/",
+                    "genres": ["genre1", "genre2"],
+                    "duration": "120 min",
+                  },
+                  ...
+                ]
+              }
+              The response must only contain the JSON object without any additional text or explanation. If no movies match the criteria, return an empty array in the recommendations field.`
+          },
+        ],
+      });
+
+      setStatus('Processing the response from the AI...');
+
+      const response = completion.choices[0].message.content;
+
+      if (!response) {
+        setStatus('No recommendations found. Please try different filters.');
+        setIsLoading(false);
+        return;
+      }
+
+      setMovies(response ? JSON.parse(response).recommendations : []);
+      setStatus('');
+    } catch (error) {
+      setStatus('Error fetching movies. Please try again later.');
+      console.error('Error fetching movies:', error);
+      setMovies([]);
+    }
+
     setIsLoading(false);
   };
 
@@ -295,6 +346,9 @@ export default function Home() {
       <Help
         isOpen={isHelpOpen}
         handleToggleClick={handleToggleHelpClick}
+      />
+      <Status
+        message={status}
       />
     </main>
   );
