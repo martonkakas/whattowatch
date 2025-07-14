@@ -1,6 +1,6 @@
 'use client'
 
-import OpenAI from 'openai';
+import axios from 'axios';
 
 import { Movie } from '../types/Movie';
 
@@ -85,71 +85,33 @@ export default function Home() {
     }
   };
 
+  const fetchMovies = async () => {
+    const response = await axios.request({
+      method: 'POST',
+      url: `${process.env.API_ENDPOINT}/api/recommend`,
+      data: {
+        vibe,
+        genres,
+        startYear,
+        endYear
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const json = JSON.parse(response.data);
+    console.log('Response from API:', json.recommendations);
+    setMovies(json.recommendations);
+  };
+
+
   const handleSubmit = async () => {
     setIsLoading(true);
     setStatus('Starting to fetch movie recommendations...');
 
     try {
-      const client = new OpenAI({
-        apiKey: process.env.NEXT_PUBLIC_XAI_API_KEY,
-        baseURL: 'https://api.x.ai/v1',
-        dangerouslyAllowBrowser: true
-      });
-
-      if (!client) {
-        setStatus('Failed to initialize OpenAI client.');
-        setIsLoading(false);
-        return;
-      } else {
-        setStatus('Started fetching movie recommendations...');
-      }
-
-      const completion = await client.chat.completions.create({
-        model: 'grok-4',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a film recommending AI. Recommend a movie based on the user\'s preferences (e.g., genre, mood, start year - end year).',
-          },
-          {
-            role: 'user',
-            content: `Please recommend 3 movies for me which are eligible for the following preferences:
-              - Genre: ${genres.length > 0 ? genres.join(', ') : 'any'},
-              - Vibe: ${vibe || 'any'},
-              - Start Year: ${startYear || 'any'},
-              - End Year: ${endYear || 'any'}.
-              Your response must be a JSON object with the following structure:
-              {
-                "recommendations": [
-                  {
-                    "title": "Movie Title",
-                    "plot": "Brief description of the movie plot.",
-                    "year": 2023,
-                    "poster": "URL to the movie poster image",
-                    "imdbId": "tt1234567",
-                    "imdbUrl": "https://www.imdb.com/title/tt1234567/",
-                    "genres": ["genre1", "genre2"],
-                    "duration": "120 min",
-                  },
-                  ...
-                ]
-              }
-              The response must only contain the JSON object without any additional text or explanation. If no movies match the criteria, return an empty array in the recommendations field.`
-          },
-        ],
-      });
-
-      setStatus('Processing the response from the AI...');
-
-      const response = completion.choices[0].message.content;
-
-      if (!response) {
-        setStatus('No recommendations found. Please try different filters.');
-        setIsLoading(false);
-        return;
-      }
-
-      setMovies(response ? JSON.parse(response).recommendations : []);
+      setStatus('Fetching movies...');
+      await fetchMovies();
       setStatus('');
     } catch (error) {
       setStatus('Error fetching movies. Please try again later.');
