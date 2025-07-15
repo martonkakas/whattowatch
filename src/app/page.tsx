@@ -2,12 +2,12 @@
 
 import axios from 'axios';
 
-import { Movie } from '../types/Movie';
+import { Movie } from '@/types/Movie';
 
 import { ChangeEvent, useId, useRef, useState } from 'react';
-import { Help } from '../components/help';
-import { Header } from '../components/header';
-import { IconButton } from '../components/icon-button';
+import { Help } from '@/components/help';
+import { Header } from '@/components/header';
+import { IconButton } from '@/components/icon-button';
 
 import { Status } from '@/components/status';
 import { YearFilter } from '@/components/year-filter';
@@ -15,6 +15,7 @@ import { MovieList } from '@/components/movie-list';
 import { GenreFilter } from '@/components/genre-filter';
 import { FilterHeader } from '@/components/filter-header';
 import { styles } from '@/components/styles';
+import { Banner } from '@/components/banner';
 
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
@@ -243,6 +244,7 @@ export default function Home() {
           handleImageError={handleImageError}
         />
       )}
+      <Banner />
       <Help
         isOpen={isHelpOpen}
         handleToggleClick={handleToggleHelpClick}
