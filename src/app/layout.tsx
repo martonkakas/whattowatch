@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import './globals.css';
 import BMCWidget from './bmc-widget';
 import Script from 'next/script';
@@ -38,6 +39,7 @@ export default function RootLayout({
         {children}
         <BMCWidget />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
