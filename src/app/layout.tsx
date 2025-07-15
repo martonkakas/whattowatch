@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import { Analytics } from "@vercel/analytics/next"
 import './globals.css';
+import Script from 'next/script';
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -28,7 +29,8 @@ export default function RootLayout({
       >
         {children}
         <Analytics />
-        <script
+        <Script
+          strategy="afterInteractive"
           async
           data-name="BMC-Widget"
           data-cfasync="false"
@@ -40,7 +42,7 @@ export default function RootLayout({
           data-position="Right"
           data-x_margin="16"
           data-y_margin="16"
-        ></script>
+        />
       </body>
     </html>
   );
