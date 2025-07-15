@@ -25,6 +25,7 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <meta name="google-adsense-account" content="ca-pub-3344265124550217" />
+        <meta name="fo-verify" content="121e2b1d-ecbc-4558-a5d6-998f241a0d17" />
         <Script
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3344265124550217"
           strategy="afterInteractive"
