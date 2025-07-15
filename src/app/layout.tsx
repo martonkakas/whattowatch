@@ -3,6 +3,7 @@ import { Space_Grotesk } from 'next/font/google';
 import { Analytics } from "@vercel/analytics/next"
 import './globals.css';
 import BMCWidget from './bmc-widget';
+import Adsense from './adsense';
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -29,6 +30,7 @@ export default function RootLayout({
       >
         {children}
         <BMCWidget />
+        <Adsense />
         <Analytics />
       </body>
     </html>
