@@ -3,6 +3,7 @@ import { Space_Grotesk } from 'next/font/google';
 import { Analytics } from "@vercel/analytics/next"
 import './globals.css';
 import BMCWidget from './bmc-widget';
+import Script from ;
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -24,6 +25,11 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
         <meta name="google-adsense-account" content="ca-pub-3344265124550217" />
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3344265124550217"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
+        />
       </head>
       <body
         className={`${spaceGrotesk.variable} antialiased`}
