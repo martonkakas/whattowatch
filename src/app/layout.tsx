@@ -3,7 +3,7 @@ import { Space_Grotesk } from 'next/font/google';
 import { Analytics } from "@vercel/analytics/next"
 import './globals.css';
 import BMCWidget from './bmc-widget';
-import Script from ;
+import Script from 'next/script';
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
