@@ -44,3 +44,9 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.adsbygoogle {
+  display: block;
+  width: 100%;
+  height: auto;
+}
