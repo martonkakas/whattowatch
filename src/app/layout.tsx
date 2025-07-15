@@ -23,15 +23,8 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-      </head>
-      <body
-        className={`${spaceGrotesk.variable} antialiased`}
-      >
-        {children}
-        <Analytics />
         <Script
           strategy="afterInteractive"
-          async
           data-name="BMC-Widget"
           data-cfasync="false"
           src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
@@ -43,6 +36,12 @@ export default function RootLayout({
           data-x_margin="16"
           data-y_margin="16"
         />
+      </head>
+      <body
+        className={`${spaceGrotesk.variable} antialiased`}
+      >
+        {children}
+        <Analytics />
       </body>
     </html>
   );
