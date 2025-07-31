@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     console.log('Calling AI with data:', data);
 
     const completion = await client.chat.completions.create({
-      model: 'grok-3-mini',
+      model: 'grok-3-mini-fast',
       messages: [
         {
           role: 'system',
