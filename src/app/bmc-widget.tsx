@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export default function BMCWidget() {
+export const BMCWidget = () => {
   useEffect(() => {
     const script = document.createElement('script');
     script.setAttribute('data-name', 'BMC-Widget');
@@ -32,4 +32,4 @@ export default function BMCWidget() {
   }, []);
 
   return null;
-}
+};

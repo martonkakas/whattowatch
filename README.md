@@ -1,17 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 What to Watch - AI Movie Recommendation App
 
-## Getting Started
+An intelligent movie recommendation app powered by AI that helps you discover your next favorite film based on your mood, preferred genres, and time period.
 
-First, run the development server:
+## ✨ Features
+
+- **AI-Powered Recommendations** - Uses X.AI (Grok-3-mini) to generate personalized movie suggestions
+- **Smart Filtering** - Filter by genres, release years, and personal vibe/mood
+- **Rich Movie Data** - Complete information including plots, posters, IMDB links, and ratings
+- **Modern UI** - Responsive design with intuitive user experience
+- **Fast Performance** - Built with Next.js for optimal loading speeds
+
+## 🚀 Live Demo
+
+[Visit the live application](https://whattowatch-martonkakas.vercel.app) *(Replace with your actual Vercel URL)*
+
+## 🛠️ Getting Started
+
+First, clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/martonkakas/whattowatch.git
+cd whattowatch
+npm install
+```
+
+Set up environment variables by creating a `.env.local` file:
+
+```bash
+XAI_API_KEY=your_xai_api_key_here
+EDGE_CONFIG=your_vercel_edge_config_url
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

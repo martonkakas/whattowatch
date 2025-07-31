@@ -17,6 +17,9 @@ import { FilterHeader } from '@/components/filter-header';
 import { styles } from '@/components/styles';
 import { Banner } from '@/components/banner';
 
+// import { get } from '@vercel/edge-config';
+
+
 export default function Home() {
   const availableGenres = ['Action', 'Comedy', 'Drama', 'Sci-Fi', 'Horror', 'Romance'];
 
@@ -99,7 +102,7 @@ export default function Home() {
     try {
       const response = await axios.request({
         method: 'POST',
-        url: `${process.env.API_ENDPOINT}/api/recommend`,
+        url: `${process.env.NODE_ENV === 'production' ? '' : process.env.API_ENDPOINT}/api/recommend`,
         data: {
           vibe,
           genres,
@@ -110,9 +113,9 @@ export default function Home() {
           'Content-Type': 'application/json'
         }
       });
-      const json = JSON.parse(response.data);
-      console.log('Response from API:', json.recommendations);
-      setMovies(json.recommendations);
+      // response.data is already a parsed JSON object from Next.js API
+      console.log('Response from API:', response.data.recommendations);
+      setMovies(response.data.recommendations);
       console.log('Fetching movies with:', { vibe, genres, startYear, endYear });
     } catch (error) {
       console.error('Error fetching movies:', error);
@@ -168,6 +171,16 @@ export default function Home() {
     target.srcset = '';
     target.src = '/placeholder.svg';
   };
+
+  // const greet = async () => {
+  //   try {
+  //     const greeting = await get('greeting');
+  //     console.log('Greeting from Edge Config:', greeting);
+  //   } catch (error) {
+  //     console.log('Edge Config not available:', error);
+  //   }
+  // };
+  // greet();
 
   return (
     <main className="flex flex-col gap-2 items-center py-6 px-4">
